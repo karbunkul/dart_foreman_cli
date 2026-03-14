@@ -1,0 +1,32 @@
+blueprints:
+  feature:
+    bricks:
+      feature_package:
+        path: "packages/features"
+        vars:
+          feature:
+            description: "Feature name (underscore case)"
+            pattern: ^[a-z]*$
+            prompt: "Feature name:"
+
+  exception:
+    vars:
+      feature:
+        behavior: select_directory
+        path: "packages/features"
+        description: "Feature location"
+        prompt: "Select feature:"
+
+      author:
+        behavior: shell
+        exec: "git config --get user.email"
+        description: "The developer's email"
+
+    bricks:
+      feature_exception:
+        path: "packages/features/{{feature}}/lib/src/exceptions"
+        vars:
+          class_name:
+            pattern: ^[a-z]*$
+            description: "Exception class name for {{feature}}"
+            prompt: "Input class name (snake case):"

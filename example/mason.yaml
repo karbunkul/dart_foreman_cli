@@ -1,0 +1,5 @@
+bricks:
+  feature_package:
+    path: bricks/feature_package
+  feature_exception:
+    path: bricks/feature_exception
