@@ -140,16 +140,16 @@ final class ForemanRunner extends CommandRunner<int> {
 
   Future<int?> _versionSetup() async {
     _logger.info(
-      '🏗️Foreman 0.9.7\n'
+      '🏗️ Foreman 0.9.7\n'
       'Author: Alexander Pokhodyun (karbunkul) https://github.com/karbunkul\n',
     );
 
     final res = await Process.run('mason', ['--version']);
     if (res.exitCode == 0) {
       _logger.info(
-        '🧱Mason information\n\n'
-        '📃Documentation: https://pub.dev/packages/mason_cli\n'
-        '🔎Discover bricks: https://brickhub.dev\n',
+        '🧱 Mason information\n\n'
+        '📃 Documentation: https://pub.dev/packages/mason_cli\n'
+        '🔎 Discover bricks: https://brickhub.dev\n',
       );
       _logger.divider();
       _logger.info(res.stdout.toString().trim());
