@@ -72,12 +72,14 @@ final class BlueprintSpec {
     for (final variable in vars) {
       variable.attach(controller);
       if (variable.description != null && variable is! ShellVariable) {
-        logger.info('\n✍️ ${controller.resolve(variable.description!)}\n');
+        logger.write('\n ✍️ ${controller.resolve(variable.description!)} \n');
       }
       var result = ResolveResult.retry;
       while (result == .retry) {
         result = await variable.resolve(logger);
       }
+
+      logger.write(' ');
 
       if (result == .cancel) {
         logger.err('Blueprint is canceled');
