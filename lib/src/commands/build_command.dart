@@ -31,9 +31,6 @@ final class BuildCommand extends ForemanCommand {
   @override
   String get name => 'build';
 
-  @override
-  bool get hidden => true;
-
   /// Cached mason brick paths loaded from the mason cache file.
   Map<String, dynamic>? _caches;
 
