@@ -12,6 +12,7 @@ import 'package:yaml/yaml.dart' show loadYaml;
 import 'commands/commands.dart' show BuildCommand;
 
 const _keyVerbose = 'verbose';
+const _keyVersion = 'version';
 const _keyHelp = 'help';
 const _keyProjectDirectory = 'project-dir';
 
@@ -41,14 +42,27 @@ final class ForemanRunner extends CommandRunner<int> {
       negatable: false,
       help: 'Enable verbose logging.',
     );
+
+    argParser.addFlag(
+      _keyVersion,
+      help: 'Reports the version of this tool.',
+      defaultsTo: false,
+      negatable: false,
+    );
     // options
     argParser.addOption(
       _keyProjectDirectory,
       abbr: 'p',
       help: 'The path to the project directory.',
     );
+
     // commands
     addCommand(BuildCommand());
+  }
+
+  @override
+  String get usageFooter {
+    return '\n(c) 2026, Alexander Pokhodyun (karbunkul)';
   }
 
   /// Returns the [File] pointing to the `foreman.yaml` configuration file.
@@ -106,6 +120,10 @@ final class ForemanRunner extends CommandRunner<int> {
 
   @override
   Future<int?> runCommand(ArgResults topLevelResults) async {
+    if (topLevelResults.wasParsed(_keyVersion)) {
+      return _versionSetup();
+    }
+
     if (topLevelResults.wasParsed(_keyHelp)) {
       return super.runCommand(topLevelResults);
     }
@@ -118,6 +136,30 @@ final class ForemanRunner extends CommandRunner<int> {
     }
 
     return super.runCommand(topLevelResults);
+  }
+
+  Future<int?> _versionSetup() async {
+    _logger.info(
+      '🏗️Foreman 0.9.7\n'
+      'Author: Alexander Pokhodyun (karbunkul) https://github.com/karbunkul\n',
+    );
+
+    final res = await Process.run('mason', ['--version']);
+    if (res.exitCode == 0) {
+      _logger.info(
+        '🧱Mason information\n\n'
+        '📃Documentation: https://pub.dev/packages/mason_cli\n'
+        '🔎Discover bricks: https://brickhub.dev\n',
+      );
+      _logger.divider();
+      _logger.info(res.stdout.toString().trim());
+    } else {
+      _logger.err('Failed to get Mason version.');
+
+      _logger.err(res.stderr.toString().trim());
+    }
+
+    return res.exitCode;
   }
 }
 
