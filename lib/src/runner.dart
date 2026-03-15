@@ -5,6 +5,8 @@ import 'package:args/args.dart' show ArgResults;
 import 'package:foreman_cli/src/config/config.dart';
 import 'package:path/path.dart' as p;
 import 'package:args/command_runner.dart' show CommandRunner, Command;
+import 'package:cli_completion/cli_completion.dart'
+    show CompletionCommandRunner;
 
 import 'package:mason_logger/mason_logger.dart';
 import 'package:yaml/yaml.dart' show loadYaml;
@@ -24,7 +26,7 @@ const _foremanConfigFileName = 'foreman.yaml';
 /// It manages global flags, project directory discovery,
 /// and configuration loading before executing commands.
 /// {@endtemplate}
-final class ForemanRunner extends CommandRunner<int> {
+final class ForemanRunner extends CompletionCommandRunner<int> {
   final Logger _logger;
   bool _verbose = false;
   late Directory _projectDir;
