@@ -121,6 +121,11 @@ final class ForemanRunner extends CompletionCommandRunner<int> {
 
   @override
   Future<int?> runCommand(ArgResults topLevelResults) async {
+    if (topLevelResults.command?.name == 'completion' ||
+        topLevelResults.wasParsed(_keyHelp)) {
+      return super.runCommand(topLevelResults);
+    }
+
     if (topLevelResults.wasParsed(_keyVersion)) {
       return _versionSetup();
     }
