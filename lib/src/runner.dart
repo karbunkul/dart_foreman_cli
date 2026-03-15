@@ -36,21 +36,20 @@ final class ForemanRunner extends CompletionCommandRunner<int> {
   /// {@macro foreman_runner}
   ForemanRunner(this._logger)
     : super('foreman', 'A CLI tool for project automation.') {
-    argParser.allowTrailingOptions;
     // flags
-    argParser.addFlag(
-      _keyVerbose,
-      abbr: 'v',
-      negatable: false,
-      help: 'Enable verbose logging.',
-    );
-
-    argParser.addFlag(
-      _keyVersion,
-      help: 'Reports the version of this tool.',
-      defaultsTo: false,
-      negatable: false,
-    );
+    argParser
+      ..addFlag(
+        _keyVerbose,
+        abbr: 'v',
+        negatable: false,
+        help: 'Enable verbose logging.',
+      )
+      ..addFlag(
+        _keyVersion,
+        help: 'Reports the version of this tool.',
+        defaultsTo: false,
+        negatable: false,
+      );
     // options
     argParser.addOption(
       _keyProjectDirectory,
@@ -163,6 +162,9 @@ final class ForemanRunner extends CompletionCommandRunner<int> {
 
     return res.exitCode;
   }
+
+  @override
+  bool get enableAutoInstall => false;
 }
 
 /// {@template foreman_command}
