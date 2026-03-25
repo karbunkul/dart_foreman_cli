@@ -71,23 +71,23 @@ final class BlueprintSpec {
 
     for (final variable in vars) {
       variable.attach(controller);
-      // if (variable.description != null && variable is! ShellVariable) {
-      //   logger.write('\n ✍️ ${controller.resolve(variable.description!)} \n');
-      // }
+      if (variable.description != null && variable is! ShellVariable) {
+        logger.write('\n ✍️ ${controller.resolve(variable.description!)} \n');
+      }
       var result = ResolveResult.retry;
       while (result == .retry) {
         result = await variable.resolve(logger);
       }
 
-      // logger.write(' ');
+      logger.write(' ');
 
       if (result == .cancel) {
         logger.err('Blueprint is canceled');
         break;
       }
-      // logger.detail(
-      //   '[${variable.behavior.id}]: 👌 Resolved ${variable.name} = ${controller.values[variable.name]}',
-      // );
+      logger.detail(
+        '[${variable.behavior.id}]: 👌 Resolved ${variable.name} = ${controller.values[variable.name]}',
+      );
 
       variable.detach();
     }
