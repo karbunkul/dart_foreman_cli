@@ -74,6 +74,8 @@ final class BuildCommand extends ForemanCommand {
         controller: controller,
       );
 
+      await Future.delayed(const Duration(milliseconds: 100));
+
       Directory.current = oldDir;
 
       final brickName = brick.name;
