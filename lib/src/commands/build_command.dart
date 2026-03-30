@@ -215,11 +215,15 @@ final class BuildCommand extends ForemanCommand {
       return brick;
     }
 
-    final brick = logger.chooseOne<BlueprintSpec>(
-      'Choose $_keyBlueprint:',
-      choices: config!.all.toList(),
-      display: (value) => '🧩 ${value.name}',
+    final allBrick = List.from(config!.allKeys)..sort();
+
+    final brickName = prompts.choose(
+      'Choose $_keyBlueprint',
+      allBrick,
+      interactive: false,
     );
+
+    final brick = config![brickName!]!;
 
     logger.info(
       '${lightGreen.wrap('✓')} Selected $_keyBlueprint: ${cyan.wrap(brick.name)}',

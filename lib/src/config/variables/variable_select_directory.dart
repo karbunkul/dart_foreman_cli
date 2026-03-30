@@ -90,14 +90,13 @@ final class SelectDirectoryVariable extends Variable {
         throw Exception('No subdirectories found in: $path');
       }
 
-      final value = logger.chooseOne(
-        prompt,
-        choices: dirs,
-        defaultValue: dirs.first,
-        display: (value) => '📁 $value',
+      final value = prompts.choose(
+        prompt ?? 'Select directory',
+        dirs,
+        interactive: false,
       );
 
-      inject(value);
+      inject(value!);
       return .ok;
     } catch (e) {
       logger.err(e.toString());

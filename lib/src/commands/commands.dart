@@ -14,5 +14,6 @@ import 'package:mason/mason.dart'
         cyan,
         lightGreen;
 import 'package:path/path.dart' as path;
+import 'package:prompts/prompts.dart' as prompts;
 
 part 'build_command.dart';

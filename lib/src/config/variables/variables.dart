@@ -1,6 +1,7 @@
 import 'dart:io' show Directory, Platform, Process;
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart' as p;
+import 'package:prompts/prompts.dart' as prompts;
 
 import 'package:foreman_cli/src/exception.dart' show EntityCastException;
 
