@@ -1,4 +1,5 @@
 import 'package:foreman_cli/src/config/config.dart';
+import 'package:foreman_cli/src/config/shell_command.dart';
 
 /// Represents the specification of a Mason brick as defined in the configuration.
 ///
@@ -13,11 +14,20 @@ final class BrickSpec {
   /// If null, the brick is expected to be available in the default registry.
   final String? path;
 
+  final List<ShellCommand>? beforeScripts;
+  final List<ShellCommand>? afterScripts;
+
   /// A list of [Variable] definitions required by this brick.
   final List<Variable> variables;
 
   /// Creates a new [BrickSpec] instance.
-  BrickSpec({required this.name, required this.variables, this.path});
+  BrickSpec({
+    required this.name,
+    required this.variables,
+    this.path,
+    this.beforeScripts,
+    this.afterScripts,
+  });
 
   /// Factory method to create a [BrickSpec] from a JSON map.
   ///
@@ -53,7 +63,36 @@ final class BrickSpec {
 
     final path = json['path'] as String?;
 
-    return BrickSpec(name: name, variables: variables, path: path);
+    List<ShellCommand>? beforeScripts;
+    List<ShellCommand>? afterScripts;
+
+    if (json.containsKey('hooks')) {
+      beforeScripts = _importScripts(json['hooks']['before']);
+      afterScripts = _importScripts(json['hooks']['after']);
+    }
+
+    return BrickSpec(
+      name: name,
+      variables: variables,
+      path: path,
+      beforeScripts: beforeScripts,
+      afterScripts: afterScripts,
+    );
+  }
+
+  static List<ShellCommand>? _importScripts(List<dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+
+    final scripts = <ShellCommand>[];
+    for (final entry in json) {
+      if (entry is String) {
+        scripts.add(ShellCommand.import(entry));
+      }
+    }
+
+    return scripts;
   }
 
   @override

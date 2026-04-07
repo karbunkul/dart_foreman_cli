@@ -1,0 +1,2 @@
+scopes:
+  - example/packages/**/lib/src/exceptions/exceptions.dart

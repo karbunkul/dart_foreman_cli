@@ -116,6 +116,19 @@ final class BuildCommand extends ForemanCommand {
           fileConflictResolution: FileConflictResolution.prompt,
           logger: logger,
         );
+
+        if (brick.afterScripts != null) {
+          for (final script in brick.afterScripts!) {
+            try {
+              final command = controller.resolve(script.command);
+              print(command);
+              print(Directory.current.path);
+              await script.run(command: command);
+            } catch (e) {
+              logger.err(e.toString());
+            }
+          }
+        }
       }
     }
   }
