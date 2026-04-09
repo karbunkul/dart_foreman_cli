@@ -44,3 +44,7 @@ blueprints:
             behavior: confirm
             default: true
             prompt: "Генерировать тесты?"
+          file:
+            behavior: select_file
+            path: packages/features
+            filter: "**/*.dart"

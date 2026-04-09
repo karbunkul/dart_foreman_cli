@@ -60,7 +60,10 @@ enum VariableBehavior {
   select(id: 'select', allowTo: [.string]),
 
   /// Confirmation prompt (yes/no) for a boolean variable.
-  confirm(id: 'confirm', allowTo: [.boolean]);
+  confirm(id: 'confirm', allowTo: [.boolean]),
+
+  /// Selection based on file system paths.
+  selectFile(id: 'select_file', allowTo: [.string]);
 
   /// The unique string identifier used in configuration files (e.g., yaml).
   final String id;
