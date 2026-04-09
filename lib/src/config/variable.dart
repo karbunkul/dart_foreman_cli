@@ -94,6 +94,8 @@ abstract base class Variable {
       VariableBehavior.mason => MasonVariable.import(json),
       VariableBehavior.combine => throw UnimplementedError(),
       VariableBehavior.selectDirectory => SelectDirectoryVariable.import(json),
+      VariableBehavior.select => SelectVariable.import(json),
+      VariableBehavior.confirm => ConfirmVariable.import(json),
     };
   }
 
@@ -121,6 +123,18 @@ abstract base class Variable {
       final SelectDirectoryVariable(:path, :prompt) =
           this as SelectDirectoryVariable;
       fields.putIfAbsent('path', () => path);
+      fields.putIfAbsent('prompt', () => prompt);
+    }
+
+    if (this is SelectVariable) {
+      final SelectVariable(:options, :prompt) = this as SelectVariable;
+      fields.putIfAbsent('options', () => options);
+      fields.putIfAbsent('prompt', () => prompt);
+    }
+
+    if (this is ConfirmVariable) {
+      final ConfirmVariable(:defaultValue, :prompt) = this as ConfirmVariable;
+      fields.putIfAbsent('default', () => defaultValue);
       fields.putIfAbsent('prompt', () => prompt);
     }
 

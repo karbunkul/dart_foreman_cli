@@ -34,3 +34,13 @@ blueprints:
             pattern: ^[a-z]*$
             description: "Exception class name for {{feature}}"
             prompt: "Input class name (snake case):"
+          platform:
+            behavior: select
+            options:
+              - web
+              - desktop
+              - mobile
+          with_tests:
+            behavior: confirm
+            default: true
+            prompt: "Генерировать тесты?"

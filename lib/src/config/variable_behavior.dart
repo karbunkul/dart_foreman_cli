@@ -54,7 +54,13 @@ enum VariableBehavior {
   ///     type: string
   ///     behavior: select_directory
   /// ```
-  selectDirectory(id: 'select_directory', allowTo: [.string]);
+  selectDirectory(id: 'select_directory', allowTo: [.string]),
+
+  /// Interactive selection from a predefined list of options.
+  select(id: 'select', allowTo: [.string]),
+
+  /// Confirmation prompt (yes/no) for a boolean variable.
+  confirm(id: 'confirm', allowTo: [.boolean]);
 
   /// The unique string identifier used in configuration files (e.g., yaml).
   final String id;
