@@ -31,7 +31,7 @@ enum _ResolveMethod {
 /// using Mustache templates.
 final class VariableController {
   /// Internal storage for key-value pairs used during template resolution.
-  final Map<String, String> _storage = {};
+  final Map<String, Object> _storage = {};
 
   /// Resolves placeholders in the provided [template] string using the current storage.
   ///
@@ -52,7 +52,7 @@ final class VariableController {
       final value = _storage[key];
       if (value == null) return match.group(0)!;
 
-      return _resolveMethod(value, _ResolveMethod.fromMethod(method));
+      return _resolveMethod(value as String, _ResolveMethod.fromMethod(method));
     });
 
     final t = Template(processed, htmlEscapeValues: false);
@@ -85,7 +85,7 @@ final class VariableController {
   /// ```dart
   /// controller.inject(key: 'version', value: '1.0.0');
   /// ```
-  void inject({required String key, required String value}) {
+  void inject({required String key, required Object value}) {
     _storage[key] = value;
   }
 
