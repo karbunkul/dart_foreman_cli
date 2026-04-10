@@ -28,7 +28,6 @@ blueprints:
         hooks:
           after:
             - inlay build --file="example/packages/features/{{feature}}/lib/src/exceptions/exceptions.dart"
-
         vars:
           class_name:
             pattern: ^[a-z]*$
