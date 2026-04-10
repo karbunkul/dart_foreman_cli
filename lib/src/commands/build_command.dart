@@ -107,7 +107,10 @@ final class BuildCommand extends ForemanCommand {
       );
       logger.divider();
 
-      final confirm = logger.confirm('Do you want to continue?');
+      final confirm = logger.confirm(
+        'Do you want to continue?',
+        defaultValue: true,
+      );
 
       if (confirm) {
         await generator.generate(

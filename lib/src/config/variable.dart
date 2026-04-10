@@ -92,8 +92,11 @@ abstract base class Variable {
     return switch (behavior) {
       VariableBehavior.shell => ShellVariable.import(json),
       VariableBehavior.mason => MasonVariable.import(json),
-      VariableBehavior.combine => throw UnimplementedError(),
+      VariableBehavior.combine => CombineVariable.import(json),
       VariableBehavior.selectDirectory => SelectDirectoryVariable.import(json),
+      VariableBehavior.select => SelectVariable.import(json),
+      VariableBehavior.confirm => ConfirmVariable.import(json),
+      VariableBehavior.selectFile => SelectFileVariable.import(json),
     };
   }
 
@@ -122,6 +125,31 @@ abstract base class Variable {
           this as SelectDirectoryVariable;
       fields.putIfAbsent('path', () => path);
       fields.putIfAbsent('prompt', () => prompt);
+    }
+
+    if (this is SelectVariable) {
+      final SelectVariable(:options, :prompt) = this as SelectVariable;
+      fields.putIfAbsent('options', () => options);
+      fields.putIfAbsent('prompt', () => prompt);
+    }
+
+    if (this is ConfirmVariable) {
+      final ConfirmVariable(:defaultValue, :prompt) = this as ConfirmVariable;
+      fields.putIfAbsent('default', () => defaultValue);
+      fields.putIfAbsent('prompt', () => prompt);
+    }
+
+    if (this is SelectFileVariable) {
+      final SelectFileVariable(:path, :filter, :prompt) =
+          this as SelectFileVariable;
+      fields.putIfAbsent('path', () => path);
+      fields.putIfAbsent('filter', () => filter);
+      fields.putIfAbsent('prompt', () => prompt);
+    }
+
+    if (this is CombineVariable) {
+      final CombineVariable(:template) = this as CombineVariable;
+      fields.putIfAbsent('template', () => template);
     }
 
     if (this is MasonVariable) {

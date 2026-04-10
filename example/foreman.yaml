@@ -28,9 +28,25 @@ blueprints:
         hooks:
           after:
             - inlay build --file="example/packages/features/{{feature}}/lib/src/exceptions/exceptions.dart"
-
         vars:
           class_name:
             pattern: ^[a-z]*$
             description: "Exception class name for {{feature}}"
             prompt: "Input class name (snake case):"
+          platform:
+            behavior: select
+            options:
+              - web
+              - desktop
+              - mobile
+          with_tests:
+            behavior: confirm
+            default: true
+            prompt: "Генерировать тесты?"
+          file:
+            behavior: select_file
+            path: packages/features
+            filter: "**/*.dart"
+          feature_path:
+            behavior: combine
+            template: "lib/src/{{feature.pascalCase()}}"
