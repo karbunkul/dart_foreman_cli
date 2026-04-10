@@ -1,9 +1,20 @@
 import 'package:mustache_template/mustache.dart' show Template;
+import 'package:path/path.dart' as p;
 import 'package:recase/recase.dart';
 
 enum _ResolveMethod {
   original('original'),
-  pascalCase('pascalCase');
+  pascalCase('pascalCase'),
+  camelCase('camelCase'),
+  snakeCase('snakeCase'),
+  paramCase('paramCase'),
+  dotCase('dotCase'),
+  pathCase('pathCase'),
+  sentenceCase('sentenceCase'),
+  titleCase('titleCase'),
+  constantCase('constantCase'),
+  headerCase('headerCase'),
+  fileNameWithoutExt('fileNameWithoutExt');
 
   final String method;
   const _ResolveMethod(this.method);
@@ -11,7 +22,7 @@ enum _ResolveMethod {
   factory _ResolveMethod.fromMethod(String method) {
     return values.firstWhere(
       (e) => e.method == method,
-      orElse: () => .original,
+      orElse: () => _ResolveMethod.original,
     );
   }
 }
@@ -32,34 +43,37 @@ final class VariableController {
   /// final result = controller.resolve('Hello, {{name}}!'); // 'Hello, World!'
   /// ```
   String resolve(String template) {
-    final pattern = RegExp(r'{{\s?(\w+)\.(\w+)\(\)\s?}}');
+    final pattern = RegExp(r'\{\{\s*(\w+)\.(\w+)\(\)\s*\}\}');
 
-    if (pattern.hasMatch(template)) {
-      print('ku');
-      final withPlaceHolders = template.replaceAllMapped(pattern, (match) {
-        if (match.groupCount == 2) {
-          final key = match.group(1)!;
-          final method = match.group(2)!;
-          final value = _storage[key]!;
+    final processed = template.replaceAllMapped(pattern, (match) {
+      final key = match.group(1)!;
+      final method = match.group(2)!;
 
-          return _resolveMethod(value, _ResolveMethod.fromMethod(method));
-        }
+      final value = _storage[key];
+      if (value == null) return match.group(0)!;
 
-        throw UnimplementedError();
-      });
-      final t = Template(withPlaceHolders, htmlEscapeValues: true);
+      return _resolveMethod(value, _ResolveMethod.fromMethod(method));
+    });
 
-      return t.renderString(_storage);
-    } else {
-      final t = Template(template, htmlEscapeValues: true);
-      return t.renderString(_storage);
-    }
+    final t = Template(processed, htmlEscapeValues: false);
+    return t.renderString(_storage);
   }
 
   String _resolveMethod(String value, _ResolveMethod method) {
+    final rc = ReCase(value);
     return switch (method) {
       _ResolveMethod.original => value,
-      _ResolveMethod.pascalCase => ReCase(value).pascalCase,
+      _ResolveMethod.pascalCase => rc.pascalCase,
+      _ResolveMethod.camelCase => rc.camelCase,
+      _ResolveMethod.snakeCase => rc.snakeCase,
+      _ResolveMethod.paramCase => rc.paramCase,
+      _ResolveMethod.dotCase => rc.dotCase,
+      _ResolveMethod.pathCase => rc.pathCase,
+      _ResolveMethod.sentenceCase => rc.sentenceCase,
+      _ResolveMethod.titleCase => rc.titleCase,
+      _ResolveMethod.constantCase => rc.constantCase,
+      _ResolveMethod.headerCase => rc.headerCase,
+      _ResolveMethod.fileNameWithoutExt => p.basenameWithoutExtension(value),
     };
   }
 
