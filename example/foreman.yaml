@@ -48,3 +48,6 @@ blueprints:
             behavior: select_file
             path: packages/features
             filter: "**/*.dart"
+          feature_path:
+            behavior: combine
+            template: "lib/src/{{feature.pascalCase()}}"

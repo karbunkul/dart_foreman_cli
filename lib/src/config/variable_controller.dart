@@ -1,4 +1,20 @@
 import 'package:mustache_template/mustache.dart' show Template;
+import 'package:recase/recase.dart';
+
+enum _ResolveMethod {
+  original('original'),
+  pascalCase('pascalCase');
+
+  final String method;
+  const _ResolveMethod(this.method);
+
+  factory _ResolveMethod.fromMethod(String method) {
+    return values.firstWhere(
+      (e) => e.method == method,
+      orElse: () => .original,
+    );
+  }
+}
 
 /// A controller responsible for managing and resolving variables within strings
 /// using Mustache templates.
@@ -16,9 +32,35 @@ final class VariableController {
   /// final result = controller.resolve('Hello, {{name}}!'); // 'Hello, World!'
   /// ```
   String resolve(String template) {
-    final t = Template(template, htmlEscapeValues: true);
+    final pattern = RegExp(r'{{\s?(\w+)\.(\w+)\(\)\s?}}');
 
-    return t.renderString(_storage);
+    if (pattern.hasMatch(template)) {
+      print('ku');
+      final withPlaceHolders = template.replaceAllMapped(pattern, (match) {
+        if (match.groupCount == 2) {
+          final key = match.group(1)!;
+          final method = match.group(2)!;
+          final value = _storage[key]!;
+
+          return _resolveMethod(value, _ResolveMethod.fromMethod(method));
+        }
+
+        throw UnimplementedError();
+      });
+      final t = Template(withPlaceHolders, htmlEscapeValues: true);
+
+      return t.renderString(_storage);
+    } else {
+      final t = Template(template, htmlEscapeValues: true);
+      return t.renderString(_storage);
+    }
+  }
+
+  String _resolveMethod(String value, _ResolveMethod method) {
+    return switch (method) {
+      _ResolveMethod.original => value,
+      _ResolveMethod.pascalCase => ReCase(value).pascalCase,
+    };
   }
 
   /// Injects a new [key]-[value] pair into the controller's storage.
