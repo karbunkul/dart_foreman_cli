@@ -121,14 +121,17 @@ final class BuildCommand extends ForemanCommand {
         );
 
         if (brick.afterScripts != null) {
+          final oldDir = Directory.current;
+          Directory.current = projectDir.absolute;
           for (final script in brick.afterScripts!) {
             try {
+              logger.info('🚀 Running after script: ${script.command}');
               final command = controller.resolve(script.command);
-              print(command);
-              print(Directory.current.path);
               await script.run(command: command);
             } catch (e) {
               logger.err(e.toString());
+            } finally {
+              Directory.current = oldDir;
             }
           }
         }
