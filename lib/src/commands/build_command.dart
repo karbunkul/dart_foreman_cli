@@ -218,26 +218,33 @@ final class BuildCommand extends ForemanCommand {
   /// Otherwise, it prompts the user to choose from the available blueprints.
   BlueprintSpec _getBlueprint() {
     final blueprintArg = argResults?[_keyBlueprint] as String?;
+    final rest = argResults?.rest ?? [];
 
-    if (blueprintArg != null && config != null) {
-      if (config!.has(blueprintArg)) {
-        return config![blueprintArg]!;
-      } else {
+    // 1. Try to get blueprint by name (either via -b or first positional argument)
+    String? targetName = blueprintArg;
+    if (targetName == null &&
+        rest.isNotEmpty &&
+        !argResults!.wasParsed(_keyTag)) {
+      targetName = rest.first;
+    }
+
+    if (targetName != null && config != null) {
+      if (config!.has(targetName)) {
+        return config![targetName]!;
+      } else if (blueprintArg != null) {
         throw BrickNotFoundException(
-          brickName: blueprintArg,
+          brickName: targetName,
           configFile: configFile,
         );
       }
     }
 
     Iterable<BlueprintSpec> blueprints = config?.all ?? [];
-
     final bool tagWasParsed = argResults?.wasParsed(_keyTag) ?? false;
 
+    // 2. Filter by tags if -t is provided
     if (tagWasParsed) {
       List<String> selectedTags;
-      final rest = argResults?.rest ?? [];
-
       if (rest.isEmpty) {
         final allTags = blueprints.expand((b) => b.tags).toSet().toList()
           ..sort();
