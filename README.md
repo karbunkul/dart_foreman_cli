@@ -12,8 +12,24 @@ While Mason is great for single-template generation, real-world projects often r
 
 ## Installation 📥
 
+### From source (recommended for developers)
 ```bash
 dart pub global activate --source path .
+```
+
+### Via Shell Script (for compiled binaries)
+You can install Foreman directly to `/usr/local/bin` using the following command:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/karbunkul/dart_foreman_cli/main/scripts/install.sh | bash
+```
+
+## Uninstallation 🗑️
+
+If you installed Foreman via the shell script, you can remove it using:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/karbunkul/dart_foreman_cli/main/scripts/uninstall.sh | bash
 ```
 
 ## Configuration (`foreman.yaml`) 📄
