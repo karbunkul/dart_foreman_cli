@@ -146,7 +146,7 @@ final class ForemanRunner extends CompletionCommandRunner<int> {
 
   Future<int?> _versionSetup() async {
     _logger.info(
-      '🏗️ Foreman 0.9.7\n'
+      '🏗️ Foreman 0.9.8\n'
       'Author: Alexander Pokhodyun (karbunkul) https://github.com/karbunkul\n',
     );
 
