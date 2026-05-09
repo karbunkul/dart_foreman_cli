@@ -145,27 +145,23 @@ final class ForemanRunner extends CompletionCommandRunner<int> {
   }
 
   Future<int?> _versionSetup() async {
-    _logger.info(
-      '🏗️ Foreman 0.9.8\n'
-      'Author: Alexander Pokhodyun (karbunkul) https://github.com/karbunkul\n',
-    );
+    _logger.info('🏗️  Foreman 0.9.8');
+    _logger.detail('Author: Alexander Pokhodyun (karbunkul)');
+    _logger.detail('GitHub: https://github.com/karbunkul');
 
-    final res = await Process.run('mason', ['--version']);
-    if (res.exitCode == 0) {
-      _logger.info(
-        '🧱 Mason information\n\n'
-        '📃 Documentation: https://pub.dev/packages/mason_cli\n'
-        '🔎 Discover bricks: https://brickhub.dev\n',
-      );
-      _logger.divider();
-      _logger.info(res.stdout.toString().trim());
-    } else {
-      _logger.err('Failed to get Mason version.');
-
-      _logger.err(res.stderr.toString().trim());
+    try {
+      final res = await Process.run('mason', ['--version']);
+      if (res.exitCode == 0) {
+        final version = res.stdout.toString().trim();
+        _logger.info('🧱  $version');
+      } else {
+        _logger.detail('Mason CLI is not installed.');
+      }
+    } catch (_) {
+      _logger.detail('Mason CLI is not available in PATH.');
     }
 
-    return res.exitCode;
+    return ExitCode.success.code;
   }
 
   @override
