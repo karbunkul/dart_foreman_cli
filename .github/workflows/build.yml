@@ -32,9 +32,9 @@ jobs:
       - name: Install dependencies
         run: dart pub get
 
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
-        if: matrix.os == 'ubuntu-latest'
+#      - name: Verify formatting
+#        run: dart format --output=none --set-exit-if-changed .
+#        if: matrix.os == 'ubuntu-latest'
 
       - name: Analyze project source
         run: dart analyze

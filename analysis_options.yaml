@@ -2,8 +2,8 @@ include: package:lints/recommended.yaml
 
 analyzer:
   exclude:
-    - example/bricks/**
-    - example/packages/**
+    - example/bricks/**/*
+    - example/packages/**/*
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

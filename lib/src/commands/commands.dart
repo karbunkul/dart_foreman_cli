@@ -10,7 +10,6 @@ import 'package:mason/mason.dart'
         DirectoryGeneratorTarget,
         ExitCode,
         FileConflictResolution,
-        Logger,
         MasonGenerator,
         cyan,
         lightGreen;
