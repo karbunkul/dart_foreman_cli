@@ -15,11 +15,15 @@ final class BlueprintSpec {
   /// A list of bricks associated with this blueprint.
   final List<BrickSpec> bricks;
 
+  /// A list of tags associated with this blueprint.
+  final List<String> tags;
+
   /// Creates a [BlueprintSpec] instance.
   const BlueprintSpec({
     required this.name,
     required this.variables,
     required this.bricks,
+    this.tags = const [],
   });
 
   /// Validates the blueprint for naming conflicts.
@@ -128,6 +132,20 @@ final class BlueprintSpec {
       bricks.add(brick);
     }
 
-    return BlueprintSpec(name: name, variables: variables, bricks: bricks);
+    final tagsRaw = ConfigEntity.castFieldTo<List>(
+      field: 'tags',
+      value: json['tags'],
+      entityType: .blueprint,
+      defaultValue: [],
+    );
+
+    final tags = tagsRaw.cast<String>().toList();
+
+    return BlueprintSpec(
+      name: name,
+      variables: variables,
+      bricks: bricks,
+      tags: tags,
+    );
   }
 }

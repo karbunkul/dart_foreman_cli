@@ -1,6 +1,7 @@
 part of 'commands.dart';
 
 const _keyBlueprint = 'blueprint';
+const _keyTag = 'tag';
 
 /// A type alias representing the state and generator of a blueprint.
 ///
@@ -20,6 +21,12 @@ final class BuildCommand extends ForemanCommand {
       _keyBlueprint,
       abbr: 'b',
       help: 'Blueprint name from config',
+    );
+    argParser.addFlag(
+      _keyTag,
+      abbr: 't',
+      negatable: false,
+      help: 'Filter by tags. If no tags provided, shows interactive selector.',
     );
   }
 
@@ -223,19 +230,59 @@ final class BuildCommand extends ForemanCommand {
       }
     }
 
-    if (config?.all.length == 1) {
-      final brick = config!.all.first;
+    Iterable<BlueprintSpec> blueprints = config?.all ?? [];
+
+    final bool tagWasParsed = argResults?.wasParsed(_keyTag) ?? false;
+
+    if (tagWasParsed) {
+      List<String> selectedTags;
+      final rest = argResults?.rest ?? [];
+
+      if (rest.isEmpty) {
+        final allTags = blueprints.expand((b) => b.tags).toSet().toList()
+          ..sort();
+        if (allTags.isEmpty) {
+          logger.warn('No tags found in blueprints.');
+          selectedTags = [];
+        } else {
+          final tag = prompts.choose(
+            'Select tag to filter blueprints',
+            allTags,
+            interactive: false,
+          );
+          selectedTags = tag != null ? [tag] : [];
+        }
+      } else {
+        selectedTags = rest;
+      }
+
+      if (selectedTags.isNotEmpty) {
+        blueprints = blueprints.where(
+          (b) => b.tags.any((t) => selectedTags.contains(t)),
+        );
+      }
+    }
+
+    if (blueprints.isEmpty) {
+      throw ForemanException(
+        exitCode: ExitCode.config,
+        message: 'No blueprints found matching the specified criteria.',
+      );
+    }
+
+    if (blueprints.length == 1) {
+      final brick = blueprints.first;
       logger.info(
         'Using the only available $_keyBlueprint: ${cyan.wrap(brick.name)}',
       );
       return brick;
     }
 
-    final allBrick = List.from(config!.allKeys)..sort();
+    final allKeys = blueprints.map((b) => b.name).toList()..sort();
 
     final brickName = prompts.choose(
       'Choose $_keyBlueprint',
-      allBrick,
+      allKeys,
       interactive: false,
     );
 

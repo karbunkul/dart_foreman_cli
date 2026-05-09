@@ -1,6 +1,6 @@
 name: foreman_cli
-description: "A new Flutter project."
-version: 0.9.7
+description: "A CLI tool for project automation and code generation using Mason bricks."
+version: 0.9.8
 
 environment:
   sdk: ^3.11.0

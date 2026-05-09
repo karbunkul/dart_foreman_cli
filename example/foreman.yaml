@@ -1,5 +1,6 @@
 blueprints:
   feature:
+    tags: [feature, core]
     bricks:
       feature_package:
         path: "packages/features"
@@ -10,6 +11,7 @@ blueprints:
             prompt: "Feature name:"
 
   exception:
+    tags: [exception, core]
     vars:
       feature:
         behavior: select_directory
