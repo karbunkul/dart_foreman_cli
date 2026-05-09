@@ -11,7 +11,7 @@ import 'package:cli_completion/cli_completion.dart'
 import 'package:mason_logger/mason_logger.dart';
 import 'package:yaml/yaml.dart' show loadYaml;
 
-import 'commands/commands.dart' show BuildCommand;
+import 'commands/commands.dart' show BuildCommand, ListCommand;
 
 const _keyVerbose = 'verbose';
 const _keyVersion = 'version';
@@ -59,6 +59,7 @@ final class ForemanRunner extends CompletionCommandRunner<int> {
 
     // commands
     addCommand(BuildCommand());
+    addCommand(ListCommand());
   }
 
   @override
